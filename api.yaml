@@ -1,0 +1,138 @@
+openapi: 3.0.0
+info:
+  title: Interview API
+  version: 1.0.0
+paths:
+  /api/login:
+    post:
+      summary: Login
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+      responses:
+        '200':
+          description: Token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LoginResponse'
+
+  /api/stats:
+    get:
+      summary: Get stats
+      responses:
+        '200':
+          description: Stats data and plant types
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StatsResponse'
+      security:
+        - BearerAuth: [ ]
+
+components:
+  schemas:
+    LoginRequest:
+      type: object
+      properties:
+        username:
+          type: string
+        password:
+          type: string
+
+    LoginResponse:
+      type: object
+      required: [token]
+      properties:
+        token:
+          type: string
+        user:
+          type: object
+          properties:
+            id:
+              type: integer
+            name:
+              type: string
+
+    Stat:
+      type: object
+      required: [date, plants]
+      properties:
+        date:
+          type: string
+          format: date
+        plants:
+          type: array
+          items:
+            $ref: '#/components/schemas/PlantStat'
+
+    PlantStat:
+      type: object
+      required:
+        - id
+        - displayName
+        - harvested
+        - height
+        - growthRate
+        - fertilizerUsed
+        - waterUsed
+        - soilMoisture
+        - sunlightHours
+        - pestTreatments
+        - notes
+      properties:
+        id:
+          type: string
+        displayName:
+          type: string
+        harvested:
+          type: integer
+        height:
+          type: number
+        growthRate:
+          type: number
+        fertilizerUsed:
+          type: integer
+        waterUsed:
+          type: integer
+        soilMoisture:
+          type: integer
+        sunlightHours:
+          type: integer
+        pestTreatments:
+          type: integer
+        notes:
+          type: string
+
+    StatsResponse:
+      type: object
+      required: [plantTypes, stats]
+      properties:
+        plantTypes:
+          type: array
+          items:
+            $ref: '#/components/schemas/PlantType'
+        stats:
+          type: array
+          items:
+            $ref: '#/components/schemas/Stat'
+
+    PlantType:
+      type: object
+      required: [id, label, color]
+      properties:
+        id:
+          type: string
+        label:
+          type: string
+        color:
+          type: string
+
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT

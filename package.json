@@ -1,0 +1,23 @@
+{
+  "name": "interview-demo-backend",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "wrangler dev",
+    "build": "wrangler publish --dry-run"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/node": "^24.0.3",
+    "prettier": "^3.6.0",
+    "typescript": "^5.8.3",
+    "wrangler": "^4.21.0"
+  },
+  "dependencies": {
+    "@faker-js/faker": "^9.8.0",
+    "hono": "^4.8.2"
+  }
+}
