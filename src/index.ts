@@ -55,7 +55,10 @@ app.post("/api/login", async (c) => {
     return c.json({ token: "demo-token", user: { id: 1, name: "Admin" } });
   }
 
-  return c.json({ error: "Invalid credentials" }, 401);
+  return c.json(
+    { status: 401, message: "Invalid credentials", data: null },
+    401,
+  );
 });
 
 export default app;

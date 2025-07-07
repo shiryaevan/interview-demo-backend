@@ -19,6 +19,18 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/LoginResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
 
   /api/stats:
     get:
@@ -30,6 +42,18 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/StatsResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
       security:
         - BearerAuth: [ ]
 
@@ -130,6 +154,17 @@ components:
           type: string
         color:
           type: string
+
+    ErrorResponse:
+      type: object
+      required: [status, message, data]
+      properties:
+        status:
+          type: integer
+        message:
+          type: string
+        data:
+          nullable: true
 
   securitySchemes:
     BearerAuth:
