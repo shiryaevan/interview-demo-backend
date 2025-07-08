@@ -2,7 +2,21 @@ import { Hono } from "hono";
 import { faker } from "@faker-js/faker";
 import { auth } from "./auth";
 
+const headers = {
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
+  "Access-Control-Allow-Headers": "Content-Type, Authorization",
+  "Content-Type": "application/json",
+};
+
 const app = new Hono();
+
+app.options("*", (c) => {
+  return new Response(null, {
+    status: 204,
+    headers: headers,
+  });
+});
 
 const plantTypes = [
   { id: "roses", displayName: "Roses", color: "#FF6384" },
@@ -37,14 +51,18 @@ function generateFakeStats() {
 app.get("/api/stats", auth, (c) => {
   const data = generateFakeStats();
 
-  return c.json({
-    plantTypes: plantTypes.map(({ id, displayName, color }) => ({
-      id,
-      label: displayName,
-      color,
-    })),
-    stats: data,
-  });
+  return c.json(
+    {
+      plantTypes: plantTypes.map(({ id, displayName, color }) => ({
+        id,
+        label: displayName,
+        color,
+      })),
+      stats: data,
+    },
+    200,
+    headers,
+  );
 });
 
 app.post("/api/login", async (c) => {
@@ -52,12 +70,19 @@ app.post("/api/login", async (c) => {
   const { username, password } = body;
 
   if (username === "demo@demo.com" && password === "demo") {
-    return c.json({ token: "demo-token", user: { id: 1, name: "Admin" } });
+    return c.json(
+      { token: "demo-token", user: { id: 1, name: "Admin" } },
+      200,
+      headers,
+    );
   }
 
-  return c.json(
-    { status: 401, message: "Invalid credentials", data: null },
-    401,
+  return new Response(
+    JSON.stringify({ status: 401, message: "Invalid credentials", data: null }),
+    {
+      status: 401,
+      headers: headers,
+    },
   );
 });
 
